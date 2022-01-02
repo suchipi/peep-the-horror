@@ -39,9 +39,19 @@ export default function App() {
 
       <Spacer value="2rem" />
 
-      <Box backgroundColor="var(--background-color)">
-        <Box maxWidth="1600px" margin="0 auto" padding="2rem">
+      <Box tagName="footer" backgroundColor="var(--background-color)">
+        <Box width="100vw" maxWidth="1600px" margin="0 auto" padding="2rem">
           <Instructions />
+
+          <Spacer value="2rem" />
+
+          <Box textAlign="center">
+            Made by{" "}
+            <a href="https://suchipi.com" target="_blank">
+              Suchipi
+            </a>{" "}
+            with ❤️
+          </Box>
         </Box>
       </Box>
 

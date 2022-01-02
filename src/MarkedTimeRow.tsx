@@ -25,7 +25,7 @@ export default function MarkedTimeRow({
       <Box
         border="1px solid var(--primary)"
         borderRadius="var(--border-radius)"
-        paddingLeft="var(--spacing)"
+        paddingLeft="calc(var(--spacing) / 2)"
         width="100%"
       >
         <Row alignItems="center" justifyContent="space-between">
@@ -47,7 +47,7 @@ export default function MarkedTimeRow({
           </Row>
           <Row fontSize={18}>
             <Button
-              padding="8px"
+              padding="8px 12px"
               borderRadius="0"
               border="none"
               onClick={() => {
@@ -60,7 +60,7 @@ export default function MarkedTimeRow({
 
             <Button
               contrast
-              padding="8px"
+              padding="8px 12px"
               borderRadius="0"
               onClick={() => {
                 controls.updateMarkedTimeAtIndex(index, data.currentTime);
@@ -71,7 +71,7 @@ export default function MarkedTimeRow({
 
             <Button
               secondary
-              padding="8px"
+              padding="8px 12px"
               borderRadius="0"
               onClick={() => {
                 controls.removeMarkedTimeAtIndex(index);
