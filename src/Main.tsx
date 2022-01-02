@@ -65,7 +65,7 @@ export default function Main({ appState }: { appState: AppState }) {
           onMouseDown={controls.startPeeping}
           onMouseUp={controls.stopPeeping}
         >
-          Peep The Horror (Alt + Down Arrow)
+          Peep the Horror (Alt + Down Arrow)
         </Button>
       </Row>
     </Column>
