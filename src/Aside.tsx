@@ -4,30 +4,32 @@ import { Row, Column } from "./Layout";
 import Button from "./Button";
 
 export default function Aside({ appState }: { appState: AppState }) {
-  const { markedTimes, currentTime } = appState.data;
-  const {
-    setCurrentTime,
-    setIsPlaying,
-    updateMarkedTimeAtIndex,
-    removeMarkedTimeAtIndex,
-  } = appState.controls;
+  const { data, controls } = appState;
 
   return (
     <Column
       tagName="aside"
       gap="var(--spacing)"
       flexBasis="33%"
-      maxHeight="100vh"
+      maxHeight="calc(100vh - (2 * var(--spacing)))"
       overflowY="auto"
     >
-      {markedTimes.map((time, index) => (
+      {data.markedTimes.length > 0 ? (
+        <Button
+          backgroundColor="var(--del-color)"
+          onClick={controls.clearMarkedTimes}
+        >
+          Remove All (-)
+        </Button>
+      ) : null}
+      {data.markedTimes.map((time, index) => (
         <React.Fragment key={index}>
           <Row gap="0.5em">
             <Button
               flexBasis="100%"
               onClick={() => {
-                setCurrentTime(time);
-                setIsPlaying(true);
+                controls.setCurrentTime(time);
+                controls.setIsPlaying(true);
               }}
             >
               Play {time.toFixed(3)} ({index + 1})
@@ -35,7 +37,7 @@ export default function Aside({ appState }: { appState: AppState }) {
             <Column flexBasis="0%" gap="0.5em">
               <Button
                 onClick={() => {
-                  updateMarkedTimeAtIndex(index, currentTime);
+                  controls.updateMarkedTimeAtIndex(index, data.currentTime);
                 }}
               >
                 Update{index < 9 ? ` (Shift+${index + 1})` : ""}
@@ -43,7 +45,7 @@ export default function Aside({ appState }: { appState: AppState }) {
               <Button
                 backgroundColor="var(--del-color)"
                 onClick={() => {
-                  removeMarkedTimeAtIndex(index);
+                  controls.removeMarkedTimeAtIndex(index);
                 }}
               >
                 Remove{index < 9 ? ` (Ctrl+${index + 1})` : ""}

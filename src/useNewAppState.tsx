@@ -8,7 +8,9 @@ export default function useNewAppState() {
   );
 
   const [markedTimesVersion, setMarkedTimesVersion] = useState<number>(0);
-  const markedTimes = useRef<Array<number>>([]);
+  const markedTimes = useRef<Array<number>>([
+    0.755, 2.176, 2.391, 2.613, 4.47, 6.988,
+  ]);
 
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -20,63 +22,63 @@ export default function useNewAppState() {
     timeout: null as NodeJS.Timeout | null,
   }).current;
 
-  const appState: AppState = {
-    data: {
-      url,
-      markedTimes: markedTimes.current,
-      currentTime,
-      isPlaying,
-      playerRef,
+  const data = {
+    url,
+    markedTimes: markedTimes.current,
+    currentTime,
+    isPlaying,
+    playerRef,
+  };
+
+  const controls = {
+    setUrl,
+    setCurrentTime: (time: number, lazy: boolean = false) => {
+      setCurrentTime(Math.max(0, time));
+
+      if (!lazy) {
+        const player = playerRef.current;
+        if (player != null) {
+          player.seekTo(time, "seconds");
+        }
+      }
     },
-    controls: {
-      setUrl,
-      setCurrentTime: (time: number, lazy: boolean = false) => {
-        setCurrentTime(Math.max(0, time));
+    addMarkedTime: (time: number) => {
+      markedTimes.current.push(time);
+      setMarkedTimesVersion(markedTimesVersion + 1);
+    },
+    updateMarkedTimeAtIndex: (index: number, time: number) => {
+      markedTimes.current[index] = time;
+      setMarkedTimesVersion(markedTimesVersion + 1);
+    },
+    removeMarkedTimeAtIndex: (index: number) => {
+      markedTimes.current.splice(index, 1);
+      setMarkedTimesVersion(markedTimesVersion + 1);
+    },
+    clearMarkedTimes: () => {
+      markedTimes.current = [];
+      setMarkedTimesVersion(markedTimesVersion + 1);
+    },
+    setIsPlaying,
+    peepTheHorror: (duration: number) => {
+      const returnTime = horror.target ?? data.currentTime;
 
-        if (!lazy) {
-          const player = playerRef.current;
-          if (player != null) {
-            player.seekTo(time, "seconds");
-          }
-        }
-      },
-      addMarkedTime: (time: number) => {
-        markedTimes.current.push(time);
-        setMarkedTimesVersion(markedTimesVersion + 1);
-      },
-      updateMarkedTimeAtIndex: (index: number, time: number) => {
-        markedTimes.current[index] = time;
-        setMarkedTimesVersion(markedTimesVersion + 1);
-      },
-      removeMarkedTimeAtIndex: (index: number) => {
-        markedTimes.current.splice(index, 1);
-        setMarkedTimesVersion(markedTimesVersion + 1);
-      },
-      clearMarkedTimes: () => {
-        markedTimes.current = [];
-        setMarkedTimesVersion(markedTimesVersion + 1);
-      },
-      setIsPlaying,
-      peepTheHorror: (duration: number) => {
-        const returnTime = horror.target ?? appState.data.currentTime;
+      if (horror.timeout != null) {
+        clearTimeout(horror.timeout);
+      }
 
-        if (horror.timeout != null) {
-          clearTimeout(horror.timeout);
-        }
+      horror.target = returnTime;
+      controls.setCurrentTime(returnTime);
+      controls.setIsPlaying(true);
 
-        horror.target = returnTime;
-        appState.controls.setCurrentTime(returnTime);
-        appState.controls.setIsPlaying(true);
-
-        horror.timeout = setTimeout(() => {
-          appState.controls.setIsPlaying(false);
-          appState.controls.setCurrentTime(returnTime);
-          horror.timeout = null;
-          horror.target = null;
-        }, duration);
-      },
+      horror.timeout = setTimeout(() => {
+        controls.setIsPlaying(false);
+        controls.setCurrentTime(returnTime);
+        horror.timeout = null;
+        horror.target = null;
+      }, duration);
     },
   };
 
+  const appState: AppState = { data, controls };
   return appState;
 }

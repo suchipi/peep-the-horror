@@ -114,7 +114,12 @@ function parseEvent(event: KeyboardEvent) {
 
 export default function useKeyboardControls(appState: AppState) {
   useEffect(() => {
+    const { data, controls } = appState;
+
     const listener = (event: KeyboardEvent) => {
+      if (document.activeElement && document.activeElement.tagName === "INPUT")
+        return;
+
       const { description, key } = parseEvent(event);
 
       let eventHandled = true;
@@ -125,7 +130,7 @@ export default function useKeyboardControls(appState: AppState) {
         case "Ctrl /":
         case "Ctrl Shift /":
         case "Ctrl Shift Alt /": {
-          appState.controls.setIsPlaying(false);
+          controls.setIsPlaying(false);
           break;
         }
 
@@ -135,7 +140,7 @@ export default function useKeyboardControls(appState: AppState) {
         case "Shift +":
         case "Alt +":
         case "Shift Alt +": {
-          appState.controls.addMarkedTime(appState.data.currentTime);
+          controls.addMarkedTime(data.currentTime);
           break;
         }
 
@@ -160,10 +165,10 @@ export default function useKeyboardControls(appState: AppState) {
         case "Alt 9": {
           const index = parseInt(key) - 1;
 
-          let time = appState.data.markedTimes[index];
+          let time = data.markedTimes[index];
           if (time != null) {
-            appState.controls.setCurrentTime(time);
-            appState.controls.setIsPlaying(true);
+            controls.setCurrentTime(time);
+            controls.setIsPlaying(true);
           }
           break;
         }
@@ -189,12 +194,9 @@ export default function useKeyboardControls(appState: AppState) {
         case "Shift Alt 9": {
           const index = parseInt(key) - 1;
 
-          let time = appState.data.markedTimes[index];
+          let time = data.markedTimes[index];
           if (time != null) {
-            appState.controls.updateMarkedTimeAtIndex(
-              index,
-              appState.data.currentTime
-            );
+            controls.updateMarkedTimeAtIndex(index, data.currentTime);
           }
           break;
         }
@@ -220,9 +222,9 @@ export default function useKeyboardControls(appState: AppState) {
         case "Ctrl Alt 9": {
           const index = parseInt(key) - 1;
 
-          let time = appState.data.markedTimes[index];
+          let time = data.markedTimes[index];
           if (time != null) {
-            appState.controls.removeMarkedTimeAtIndex(index);
+            controls.removeMarkedTimeAtIndex(index);
           }
           break;
         }
@@ -230,31 +232,31 @@ export default function useKeyboardControls(appState: AppState) {
         // Remove all marked times
         case "-":
         case "_": {
-          appState.controls.clearMarkedTimes();
+          controls.clearMarkedTimes();
           break;
         }
 
         // Jump ahead 5 seconds
         case "Shift ArrowLeft": {
-          appState.controls.setCurrentTime(appState.data.currentTime - 5);
+          controls.setCurrentTime(data.currentTime - 5);
           break;
         }
 
         // Jump back 5 seconds
         case "Shift ArrowRight": {
-          appState.controls.setCurrentTime(appState.data.currentTime + 5);
+          controls.setCurrentTime(data.currentTime + 5);
           break;
         }
 
         // Scrub back 1 second; on YouTube, this is 5 seconds, but I chose to move that to Shift ArrowLeft
         case "ArrowLeft": {
-          appState.controls.setCurrentTime(appState.data.currentTime - 1);
+          controls.setCurrentTime(data.currentTime - 1);
           break;
         }
 
         // Scrub ahead 1 second; on YouTube, this is 5 seconds, but I chose to move that to Shift ArrowRight
         case "ArrowRight": {
-          appState.controls.setCurrentTime(appState.data.currentTime + 1);
+          controls.setCurrentTime(data.currentTime + 1);
           break;
         }
 
@@ -262,7 +264,7 @@ export default function useKeyboardControls(appState: AppState) {
         case "<":
         case ",":
         case "Alt ArrowLeft": {
-          appState.controls.setCurrentTime(appState.data.currentTime - 0.016);
+          controls.setCurrentTime(data.currentTime - 0.016);
           break;
         }
 
@@ -270,7 +272,7 @@ export default function useKeyboardControls(appState: AppState) {
         case ">":
         case ".":
         case "Alt ArrowRight": {
-          appState.controls.setCurrentTime(appState.data.currentTime + 0.016);
+          controls.setCurrentTime(data.currentTime + 0.016);
           break;
         }
 
@@ -283,19 +285,19 @@ export default function useKeyboardControls(appState: AppState) {
         case " ":
         case "Spacebar":
         case "K": {
-          appState.controls.setIsPlaying(!appState.data.isPlaying);
+          controls.setIsPlaying(!data.isPlaying);
           break;
         }
 
         // Jump back 10 seconds (YouTube keybind)
         case "J": {
-          appState.controls.setCurrentTime(appState.data.currentTime - 10);
+          controls.setCurrentTime(data.currentTime - 10);
           break;
         }
 
         // Jump ahead 10 seconds (YouTube keybind)
         case "L": {
-          appState.controls.setCurrentTime(appState.data.currentTime + 10);
+          controls.setCurrentTime(data.currentTime + 10);
           break;
         }
 
@@ -306,7 +308,7 @@ export default function useKeyboardControls(appState: AppState) {
         // - C toggle captions
 
         case "Alt ArrowDown": {
-          appState.controls.peepTheHorror(350);
+          controls.peepTheHorror(350);
 
           break;
         }
