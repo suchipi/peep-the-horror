@@ -34,8 +34,10 @@ export type Controls = {
   // Remove all marked times
   clearMarkedTimes: () => void;
 
-  // Sets the current position of the playhead.
-  setCurrentTime: (currentTime: number, aggressively?: boolean) => void;
+  // Sets the current position of the playhead. Pass true for `lazy` to set
+  // the current time in React's state without telling the video player to
+  // seek.
+  setCurrentTime: (currentTime: number, lazy?: boolean) => void;
 
   // Sets whether the video is playing; call with `true` to play, `false` to pause.
   setIsPlaying: (playing: boolean) => void;

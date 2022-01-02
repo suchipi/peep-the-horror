@@ -30,10 +30,10 @@ export default function useNewAppState() {
     },
     controls: {
       setUrl,
-      setCurrentTime: (time: number, aggressively: boolean = false) => {
+      setCurrentTime: (time: number, lazy: boolean = false) => {
         setCurrentTime(Math.max(0, time));
 
-        if (aggressively) {
+        if (!lazy) {
           const player = playerRef.current;
           if (player != null) {
             player.seekTo(time, "seconds");
@@ -65,12 +65,12 @@ export default function useNewAppState() {
         }
 
         horror.target = returnTime;
-        appState.controls.setCurrentTime(returnTime, true);
+        appState.controls.setCurrentTime(returnTime);
         appState.controls.setIsPlaying(true);
 
         horror.timeout = setTimeout(() => {
           appState.controls.setIsPlaying(false);
-          appState.controls.setCurrentTime(returnTime, true);
+          appState.controls.setCurrentTime(returnTime);
           horror.timeout = null;
           horror.target = null;
         }, duration);

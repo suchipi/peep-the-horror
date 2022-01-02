@@ -162,7 +162,7 @@ export default function useKeyboardControls(appState: AppState) {
 
           let time = appState.data.markedTimes[index];
           if (time != null) {
-            appState.controls.setCurrentTime(time, true);
+            appState.controls.setCurrentTime(time);
             appState.controls.setIsPlaying(true);
           }
           break;
@@ -236,25 +236,25 @@ export default function useKeyboardControls(appState: AppState) {
 
         // Jump ahead 5 seconds
         case "Shift ArrowLeft": {
-          appState.controls.setCurrentTime(appState.data.currentTime - 5, true);
+          appState.controls.setCurrentTime(appState.data.currentTime - 5);
           break;
         }
 
         // Jump back 5 seconds
         case "Shift ArrowRight": {
-          appState.controls.setCurrentTime(appState.data.currentTime + 5, true);
+          appState.controls.setCurrentTime(appState.data.currentTime + 5);
           break;
         }
 
         // Scrub back 1 second; on YouTube, this is 5 seconds, but I chose to move that to Shift ArrowLeft
         case "ArrowLeft": {
-          appState.controls.setCurrentTime(appState.data.currentTime - 1, true);
+          appState.controls.setCurrentTime(appState.data.currentTime - 1);
           break;
         }
 
         // Scrub ahead 1 second; on YouTube, this is 5 seconds, but I chose to move that to Shift ArrowRight
         case "ArrowRight": {
-          appState.controls.setCurrentTime(appState.data.currentTime + 1, true);
+          appState.controls.setCurrentTime(appState.data.currentTime + 1);
           break;
         }
 
@@ -262,10 +262,7 @@ export default function useKeyboardControls(appState: AppState) {
         case "<":
         case ",":
         case "Alt ArrowLeft": {
-          appState.controls.setCurrentTime(
-            appState.data.currentTime - 0.016,
-            true
-          );
+          appState.controls.setCurrentTime(appState.data.currentTime - 0.016);
           break;
         }
 
@@ -273,10 +270,7 @@ export default function useKeyboardControls(appState: AppState) {
         case ">":
         case ".":
         case "Alt ArrowRight": {
-          appState.controls.setCurrentTime(
-            appState.data.currentTime + 0.016,
-            true
-          );
+          appState.controls.setCurrentTime(appState.data.currentTime + 0.016);
           break;
         }
 
@@ -295,19 +289,13 @@ export default function useKeyboardControls(appState: AppState) {
 
         // Jump back 10 seconds (YouTube keybind)
         case "J": {
-          appState.controls.setCurrentTime(
-            appState.data.currentTime - 10,
-            true
-          );
+          appState.controls.setCurrentTime(appState.data.currentTime - 10);
           break;
         }
 
         // Jump ahead 10 seconds (YouTube keybind)
         case "L": {
-          appState.controls.setCurrentTime(
-            appState.data.currentTime + 10,
-            true
-          );
+          appState.controls.setCurrentTime(appState.data.currentTime + 10);
           break;
         }
 

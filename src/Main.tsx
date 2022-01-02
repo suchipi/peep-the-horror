@@ -37,7 +37,7 @@ export default function Main({ appState }: { appState: AppState }) {
           onPause={setPlayingFalse}
           onEnded={setPlayingFalse}
           onProgress={(data) => {
-            setCurrentTime(data.playedSeconds);
+            setCurrentTime(data.playedSeconds, true);
           }}
           width="initial"
           height="initial"
@@ -61,9 +61,7 @@ export default function Main({ appState }: { appState: AppState }) {
           min="0"
           step="0.1"
           value={currentTime.toFixed(3)}
-          onChange={(event) =>
-            setCurrentTime(parseFloat(event.target.value), true)
-          }
+          onChange={(event) => setCurrentTime(parseFloat(event.target.value))}
           style={{ marginBottom: "0" }}
         />
         <Button

@@ -26,7 +26,7 @@ export default function Aside({ appState }: { appState: AppState }) {
             <Button
               flexBasis="100%"
               onClick={() => {
-                setCurrentTime(time, true);
+                setCurrentTime(time);
                 setIsPlaying(true);
               }}
             >
