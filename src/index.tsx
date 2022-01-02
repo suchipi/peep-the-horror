@@ -2,8 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 
-const main = document.createElement("main");
+const root = document.createElement("div");
+root.id = "root";
 
-document.body.appendChild(main);
+document.body.appendChild(root);
 
-ReactDOM.render(<App />, main);
+ReactDOM.render(<App />, root);
