@@ -1,6 +1,6 @@
 # Peep The Horror
 
-A toy to make an impromptu soundboard out of a YouTube video.
+A toy you can use to make an impromptu soundboard out of a video (YouTube, etc).
 
 <https://peepthehorror.com>
 
