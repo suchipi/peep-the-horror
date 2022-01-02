@@ -13,11 +13,12 @@ export default function Player({ appState }: { appState: AppState }) {
 
   return (
     <Box
-      tagName="article"
       position="relative"
       width="100%"
       height="0"
       paddingBottom="56%"
+      overflow="hidden"
+      borderRadius="var(--border-radius)"
     >
       <ReactPlayer
         ref={playerRef}
