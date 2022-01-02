@@ -3,3 +3,14 @@ body {
   min-width: 100vw;
   min-height: 100vh;
 }
+
+/* Hide number input field up/down buttons. !important because I don't wanna artificially raise specificity just to make the css framework happy */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield !important;
+}

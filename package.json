@@ -1,13 +1,13 @@
 {
-  "name": "youtube-dj",
+  "name": "peep-the-horror",
   "version": "1.0.0",
-  "description": "Turn any youtube video into a soundboard",
+  "description": "Turn any YouTube video into a soundboard",
   "scripts": {
     "start": "parcel src/index.html",
     "build": "parcel build src/index.html"
   },
   "author": "Lily Scott <me@suchipi.com>",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",

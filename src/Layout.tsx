@@ -27,7 +27,7 @@ const parseCssInput = (value: number | string): string => {
   }
 };
 
-export const Padding = (
+export const Spacer = (
   props: {
     value?: number | string;
     x?: number | string;

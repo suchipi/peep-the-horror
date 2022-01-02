@@ -16,6 +16,9 @@ export type Data = {
 
   // Ref to the react-player component instance.
   playerRef: React.MutableRefObject<ReactPlayer | null>;
+
+  // Ref to the current time input
+  currentTimeInputRef: React.MutableRefObject<HTMLInputElement | null>;
 };
 
 export type Controls = {
@@ -45,6 +48,10 @@ export type Controls = {
   // Notes the current playhead position, plays the video for `duration` ms,
   // then returns to the original playhead position. Useful for previewing audio at a given timestamp.
   peepTheHorror: (duration: number) => void;
+
+  // Sets the value of the current time input ref to the value of the "currentTime" state.
+  // Use this to control when the input should be controlled.
+  syncCurrentTimeInput: () => void;
 };
 
 type AppState = {

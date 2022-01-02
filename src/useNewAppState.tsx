@@ -16,6 +16,7 @@ export default function useNewAppState() {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
   const playerRef = useRef<ReactPlayer | null>(null);
+  const currentTimeInputRef = useRef<HTMLInputElement | null>(null);
 
   const horror = useRef({
     target: null as number | null,
@@ -28,6 +29,7 @@ export default function useNewAppState() {
     currentTime,
     isPlaying,
     playerRef,
+    currentTimeInputRef,
   };
 
   const controls = {
@@ -76,6 +78,12 @@ export default function useNewAppState() {
         horror.timeout = null;
         horror.target = null;
       }, duration);
+    },
+    syncCurrentTimeInput: () => {
+      const input = currentTimeInputRef.current;
+      if (!input) return;
+
+      input.value = currentTime.toFixed(3);
     },
   };
 

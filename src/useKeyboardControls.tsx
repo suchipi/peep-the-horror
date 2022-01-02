@@ -117,10 +117,22 @@ export default function useKeyboardControls(appState: AppState) {
     const { data, controls } = appState;
 
     const listener = (event: KeyboardEvent) => {
-      if (document.activeElement && document.activeElement.tagName === "INPUT")
-        return;
-
       const { description, key } = parseEvent(event);
+
+      if (
+        document.activeElement &&
+        document.activeElement.tagName === "INPUT" &&
+        !(
+          key === " " ||
+          key === "Spacebar" ||
+          key === "K" ||
+          description === "Alt ArrowLeft" ||
+          description === "Alt ArrowRight" ||
+          description === "Alt ArrowDown"
+        )
+      ) {
+        return;
+      }
 
       let eventHandled = true;
 
@@ -265,6 +277,7 @@ export default function useKeyboardControls(appState: AppState) {
         case ",":
         case "Alt ArrowLeft": {
           controls.setCurrentTime(data.currentTime - 0.016);
+          controls.syncCurrentTimeInput();
           break;
         }
 
@@ -273,6 +286,7 @@ export default function useKeyboardControls(appState: AppState) {
         case ".":
         case "Alt ArrowRight": {
           controls.setCurrentTime(data.currentTime + 0.016);
+          controls.syncCurrentTimeInput();
           break;
         }
 
@@ -286,6 +300,7 @@ export default function useKeyboardControls(appState: AppState) {
         case "Spacebar":
         case "K": {
           controls.setIsPlaying(!data.isPlaying);
+          controls.syncCurrentTimeInput();
           break;
         }
 
@@ -308,6 +323,7 @@ export default function useKeyboardControls(appState: AppState) {
         // - C toggle captions
 
         case "Alt ArrowDown": {
+          controls.syncCurrentTimeInput();
           controls.peepTheHorror(350);
 
           break;
