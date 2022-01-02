@@ -45,9 +45,11 @@ export type Controls = {
   // Sets whether the video is playing; call with `true` to play, `false` to pause.
   setIsPlaying: (playing: boolean) => void;
 
-  // Notes the current playhead position, plays the video for `duration` ms,
-  // then returns to the original playhead position. Useful for previewing audio at a given timestamp.
-  peepTheHorror: (duration: number) => void;
+  // Saves the current playhead position and plays the video
+  startPeeping: () => void;
+
+  // Returns to the previously-saved playheaed position and pauses the video
+  stopPeeping: () => void;
 
   // Sets the value of the current time input ref to the value of the "currentTime" state.
   // Use this to control when the input should be controlled.

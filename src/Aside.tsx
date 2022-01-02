@@ -19,7 +19,7 @@ export default function Aside({ appState }: { appState: AppState }) {
           onClick={controls.clearMarkedTimes}
           marginBottom="var(--spacing)"
         >
-          Remove All Saved Times (-)
+          Remove All Saved Times (Alt + Minus)
         </Button>
       ) : null}
       {data.markedTimes.map((_, index) => (

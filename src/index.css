@@ -2,6 +2,7 @@ body {
   margin: 0;
   min-width: 100vw;
   min-height: 100vh;
+  background-color: #eeb44a;
 }
 
 /* Hide number input field up/down buttons. !important because I don't wanna artificially raise specificity just to make the css framework happy */

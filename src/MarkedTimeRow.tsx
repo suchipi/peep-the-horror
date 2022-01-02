@@ -47,7 +47,7 @@ export default function MarkedTimeRow({
           </Row>
           <Row fontSize={18}>
             <Button
-              padding="2px 0"
+              padding="8px"
               borderRadius="0"
               border="none"
               onClick={() => {
@@ -60,24 +60,24 @@ export default function MarkedTimeRow({
 
             <Button
               contrast
-              padding="2px 0"
+              padding="8px"
               borderRadius="0"
               onClick={() => {
                 controls.updateMarkedTimeAtIndex(index, data.currentTime);
               }}
             >
-              Update{index < 9 ? ` (Shift+${index + 1})` : ""}
+              Update
             </Button>
 
             <Button
               secondary
-              padding="2px 0"
+              padding="8px"
               borderRadius="0"
               onClick={() => {
                 controls.removeMarkedTimeAtIndex(index);
               }}
             >
-              Remove{index < 9 ? ` (Ctrl+${index + 1})` : ""}
+              Remove
             </Button>
           </Row>
         </Row>

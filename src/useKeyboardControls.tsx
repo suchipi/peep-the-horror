@@ -20,6 +20,11 @@ function parseEvent(event: KeyboardEvent) {
   }
 
   switch (true) {
+    case key === " ": {
+      key = "Spacebar";
+      break;
+    }
+
     case key === "0":
     case key === ")":
     case numpad && key === "Insert": {
@@ -107,28 +112,34 @@ function parseEvent(event: KeyboardEvent) {
     }
   }
 
-  description = description + key;
+  const combo = description + key;
+  description = combo + " (" + event.type + ")";
 
-  return { description, key };
+  return { description, combo, key, type: event.type };
 }
+
+const lastStates = {};
 
 export default function useKeyboardControls(appState: AppState) {
   useEffect(() => {
     const { data, controls } = appState;
 
     const listener = (event: KeyboardEvent) => {
-      const { description, key } = parseEvent(event);
+      const { description, combo, key, type } = parseEvent(event);
+
+      // ignore repeated keydowns
+      if (lastStates[combo] === type) return;
+      lastStates[combo] = type;
 
       if (
         document.activeElement &&
         document.activeElement.tagName === "INPUT" &&
         !(
-          key === " " ||
           key === "Spacebar" ||
           key === "K" ||
-          description === "Alt ArrowLeft" ||
-          description === "Alt ArrowRight" ||
-          description === "Alt ArrowDown"
+          description === "Alt ArrowLeft (keydown)" ||
+          description === "Alt ArrowRight (keydown)" ||
+          description.startsWith("Alt ArrowDown")
         )
       ) {
         return;
@@ -138,43 +149,43 @@ export default function useKeyboardControls(appState: AppState) {
 
       switch (description) {
         // Pause
-        case "/":
-        case "Ctrl /":
-        case "Ctrl Shift /":
-        case "Ctrl Shift Alt /": {
+        case "/ (keydown)":
+        case "Ctrl / (keydown)":
+        case "Ctrl Shift / (keydown)":
+        case "Ctrl Shift Alt / (keydown)": {
           controls.setIsPlaying(false);
           break;
         }
 
         // Mark new time and add to list
-        case "+":
-        case "=":
-        case "Shift +":
-        case "Alt +":
-        case "Shift Alt +": {
+        case "+ (keydown)":
+        case "= (keydown)":
+        case "Shift + (keydown)":
+        case "Alt + (keydown)":
+        case "Shift Alt + (keydown)": {
           controls.addMarkedTime(data.currentTime);
           break;
         }
 
         // Scrub to marked time and play
-        case "1":
-        case "2":
-        case "3":
-        case "4":
-        case "5":
-        case "6":
-        case "7":
-        case "8":
-        case "9":
-        case "Alt 1":
-        case "Alt 2":
-        case "Alt 3":
-        case "Alt 4":
-        case "Alt 5":
-        case "Alt 6":
-        case "Alt 7":
-        case "Alt 8":
-        case "Alt 9": {
+        case "1 (keydown)":
+        case "2 (keydown)":
+        case "3 (keydown)":
+        case "4 (keydown)":
+        case "5 (keydown)":
+        case "6 (keydown)":
+        case "7 (keydown)":
+        case "8 (keydown)":
+        case "9 (keydown)":
+        case "Shift 1 (keydown)":
+        case "Shift 2 (keydown)":
+        case "Shift 3 (keydown)":
+        case "Shift 4 (keydown)":
+        case "Shift 5 (keydown)":
+        case "Shift 6 (keydown)":
+        case "Shift 7 (keydown)":
+        case "Shift 8 (keydown)":
+        case "Shift 9 (keydown)": {
           const index = parseInt(key) - 1;
 
           let time = data.markedTimes[index];
@@ -185,133 +196,90 @@ export default function useKeyboardControls(appState: AppState) {
           break;
         }
 
-        // Update marked time
-        case "Shift 1":
-        case "Shift 2":
-        case "Shift 3":
-        case "Shift 4":
-        case "Shift 5":
-        case "Shift 6":
-        case "Shift 7":
-        case "Shift 8":
-        case "Shift 9":
-        case "Shift Alt 1":
-        case "Shift Alt 2":
-        case "Shift Alt 3":
-        case "Shift Alt 4":
-        case "Shift Alt 5":
-        case "Shift Alt 6":
-        case "Shift Alt 7":
-        case "Shift Alt 8":
-        case "Shift Alt 9": {
-          const index = parseInt(key) - 1;
-
-          let time = data.markedTimes[index];
-          if (time != null) {
-            controls.updateMarkedTimeAtIndex(index, data.currentTime);
-          }
-          break;
-        }
-
-        // Remove marked time
-        case "Ctrl 1":
-        case "Ctrl 2":
-        case "Ctrl 3":
-        case "Ctrl 4":
-        case "Ctrl 5":
-        case "Ctrl 6":
-        case "Ctrl 7":
-        case "Ctrl 8":
-        case "Ctrl 9":
-        case "Ctrl Alt 1":
-        case "Ctrl Alt 2":
-        case "Ctrl Alt 3":
-        case "Ctrl Alt 4":
-        case "Ctrl Alt 5":
-        case "Ctrl Alt 6":
-        case "Ctrl Alt 7":
-        case "Ctrl Alt 8":
-        case "Ctrl Alt 9": {
-          const index = parseInt(key) - 1;
-
-          let time = data.markedTimes[index];
-          if (time != null) {
-            controls.removeMarkedTimeAtIndex(index);
-          }
+        // Stop playing on key release if holding alt
+        case "Shift 1 (keyup)":
+        case "Shift 2 (keyup)":
+        case "Shift 3 (keyup)":
+        case "Shift 4 (keyup)":
+        case "Shift 5 (keyup)":
+        case "Shift 6 (keyup)":
+        case "Shift 7 (keyup)":
+        case "Shift 8 (keyup)":
+        case "Shift 9 (keyup)": {
+          controls.setIsPlaying(false);
           break;
         }
 
         // Remove all marked times
-        case "-":
-        case "_": {
+        case "Alt - (keydown)":
+        case "Alt _ (keydown)": {
           controls.clearMarkedTimes();
           break;
         }
 
         // Jump ahead 5 seconds
-        case "Shift ArrowLeft": {
+        case "Shift ArrowLeft (keydown)": {
           controls.setCurrentTime(data.currentTime - 5);
           break;
         }
 
         // Jump back 5 seconds
-        case "Shift ArrowRight": {
+        case "Shift ArrowRight (keydown)": {
           controls.setCurrentTime(data.currentTime + 5);
           break;
         }
 
         // Scrub back 1 second; on YouTube, this is 5 seconds, but I chose to move that to Shift ArrowLeft
-        case "ArrowLeft": {
+        case "ArrowLeft (keydown)": {
           controls.setCurrentTime(data.currentTime - 1);
           break;
         }
 
         // Scrub ahead 1 second; on YouTube, this is 5 seconds, but I chose to move that to Shift ArrowRight
-        case "ArrowRight": {
+        case "ArrowRight (keydown)": {
           controls.setCurrentTime(data.currentTime + 1);
           break;
         }
 
         // Scrub back 0.016 seconds (similar to YouTube keybind)
-        case "<":
-        case ",":
-        case "Alt ArrowLeft": {
+        case "< (keydown)":
+        case ", (keydown)":
+        case "Alt ArrowLeft (keydown)": {
           controls.setCurrentTime(data.currentTime - 0.016);
           controls.syncCurrentTimeInput();
           break;
         }
 
         // Scrub ahead 0.016 seconds (similar to YouTube keybind)
-        case ">":
-        case ".":
-        case "Alt ArrowRight": {
+        case "> (keydown)":
+        case ". (keydown)":
+        case "Alt ArrowRight (keydown)": {
           controls.setCurrentTime(data.currentTime + 0.016);
           controls.syncCurrentTimeInput();
           break;
         }
 
         // Play/pause. Spacebar and K are from YouTube
-        case "0":
-        case "Ctrl 0":
-        case "Ctrl Alt 0":
-        case "Ctrl Shift 0":
-        case "Ctrl Shift Alt 0":
-        case " ":
-        case "Spacebar":
-        case "K": {
+        case "0 (keydown)":
+        case "Ctrl 0 (keydown)":
+        case "Ctrl Alt 0 (keydown)":
+        case "Ctrl Shift 0 (keydown)":
+        case "Ctrl Shift Alt 0 (keydown)":
+        case "Spacebar (keydown)":
+        case "K (keydown)": {
           controls.setIsPlaying(!data.isPlaying);
           controls.syncCurrentTimeInput();
           break;
         }
 
         // Jump back 10 seconds (YouTube keybind)
-        case "J": {
+        case "J (keydown)": {
           controls.setCurrentTime(data.currentTime - 10);
           break;
         }
 
         // Jump ahead 10 seconds (YouTube keybind)
-        case "L": {
+        case "L (keydown)": {
           controls.setCurrentTime(data.currentTime + 10);
           break;
         }
@@ -322,9 +290,15 @@ export default function useKeyboardControls(appState: AppState) {
         // - M toggle mute
         // - C toggle captions
 
-        case "Alt ArrowDown": {
+        case "Alt ArrowDown (keyup)":
+        case "Alt ArrowDown (keydown)": {
           controls.syncCurrentTimeInput();
-          controls.peepTheHorror(350);
+
+          if (type === "keydown") {
+            controls.startPeeping();
+          } else if (type === "keyup") {
+            controls.stopPeeping();
+          }
 
           break;
         }
@@ -341,6 +315,10 @@ export default function useKeyboardControls(appState: AppState) {
     };
 
     window.addEventListener("keydown", listener);
-    return () => window.removeEventListener("keydown", listener);
+    window.addEventListener("keyup", listener);
+    return () => {
+      window.removeEventListener("keydown", listener);
+      window.removeEventListener("keyup", listener);
+    };
   }, [appState]);
 }

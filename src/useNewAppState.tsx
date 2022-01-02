@@ -18,10 +18,7 @@ export default function useNewAppState() {
   const playerRef = useRef<ReactPlayer | null>(null);
   const currentTimeInputRef = useRef<HTMLInputElement | null>(null);
 
-  const horror = useRef({
-    target: null as number | null,
-    timeout: null as NodeJS.Timeout | null,
-  }).current;
+  const [horrorTarget, setHorrorTarget] = useState<number | null>(null);
 
   const data = {
     url,
@@ -61,24 +58,21 @@ export default function useNewAppState() {
       setMarkedTimesVersion(markedTimesVersion + 1);
     },
     setIsPlaying,
-    peepTheHorror: (duration: number) => {
-      const returnTime = horror.target ?? data.currentTime;
 
-      if (horror.timeout != null) {
-        clearTimeout(horror.timeout);
-      }
+    startPeeping: () => {
+      if (horrorTarget != null) return;
 
-      horror.target = returnTime;
-      controls.setCurrentTime(returnTime);
+      setHorrorTarget(data.currentTime);
       controls.setIsPlaying(true);
-
-      horror.timeout = setTimeout(() => {
-        controls.setIsPlaying(false);
-        controls.setCurrentTime(returnTime);
-        horror.timeout = null;
-        horror.target = null;
-      }, duration);
     },
+    stopPeeping: () => {
+      if (horrorTarget == null) return;
+
+      controls.setIsPlaying(false);
+      controls.setCurrentTime(horrorTarget);
+      setHorrorTarget(null);
+    },
+
     syncCurrentTimeInput: () => {
       const input = currentTimeInputRef.current;
       if (!input) return;

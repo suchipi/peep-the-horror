@@ -26,6 +26,8 @@ export default function App() {
           width="100vw"
           maxWidth="1600px"
           gap="var(--spacing)"
+          backgroundColor="var(--background-color)"
+          borderRadius="var(--border-radius)"
         >
           <Main appState={appState} />
           <Aside appState={appState} />

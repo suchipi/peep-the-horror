@@ -8,6 +8,7 @@ export default function Title() {
       textTransform="uppercase"
       textAlign="center"
       margin="1rem 0 0 0"
+      color="var(--background-color)"
     >
       Peep The Horror
     </Box>

@@ -16,6 +16,10 @@ export default function Main({ appState }: { appState: AppState }) {
     }
   }, [data.currentTimeInputRef.current, data.currentTime]);
 
+  useEffect(() => {
+    return () => controls.clearMarkedTimes();
+  }, [data.url]);
+
   return (
     <Column tagName="main" flexBasis="67%">
       <label htmlFor="url">Video URL</label>
@@ -56,7 +60,11 @@ export default function Main({ appState }: { appState: AppState }) {
         >
           Play/Pause (Spacebar or 0)
         </Button>
-        <Button contrast onClick={() => controls.peepTheHorror(350)}>
+        <Button
+          contrast
+          onMouseDown={controls.startPeeping}
+          onMouseUp={controls.stopPeeping}
+        >
           Peep The Horror (Alt + Down Arrow)
         </Button>
       </Row>
