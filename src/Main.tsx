@@ -7,7 +7,7 @@ import Button from "./Button";
 
 export default function Main({ appState }: { appState: AppState }) {
   const { url, currentTime, isPlaying } = appState.data;
-  const { setUrl, setCurrentTime, addMarkedTime, setIsPlaying } =
+  const { setUrl, setCurrentTime, addMarkedTime, setIsPlaying, peepTheHorror } =
     appState.controls;
 
   const playerRef = appState.data.playerRef;
@@ -70,15 +70,19 @@ export default function Main({ appState }: { appState: AppState }) {
           onClick={() => addMarkedTime(currentTime)}
           backgroundColor="var(--ins-color)"
         >
-          Mark {currentTime.toFixed(3)} (+)
+          Save Time {currentTime.toFixed(3)} (+)
         </Button>
       </Row>
 
       <Padding value="var(--spacing)" />
 
       <Row gap="var(--spacing)">
-        <Button onClick={setPlayingTrue}>Play (0)</Button>
-        <Button onClick={setPlayingFalse}>Pause (.)</Button>
+        <Button onClick={() => setIsPlaying(isPlaying)}>
+          Play/Pause (Spacebar or 0)
+        </Button>
+        <Button onClick={() => peepTheHorror(350)}>
+          Peep The Horror (Alt + Down Arrow)
+        </Button>
       </Row>
     </Column>
   );

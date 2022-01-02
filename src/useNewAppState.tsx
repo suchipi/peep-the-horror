@@ -15,6 +15,11 @@ export default function useNewAppState() {
 
   const playerRef = useRef<ReactPlayer | null>(null);
 
+  const horror = useRef({
+    target: null as number | null,
+    timeout: null as NodeJS.Timeout | null,
+  }).current;
+
   const appState: AppState = {
     data: {
       url,
@@ -47,7 +52,29 @@ export default function useNewAppState() {
         markedTimes.current.splice(index, 1);
         setMarkedTimesVersion(markedTimesVersion + 1);
       },
+      clearMarkedTimes: () => {
+        markedTimes.current = [];
+        setMarkedTimesVersion(markedTimesVersion + 1);
+      },
       setIsPlaying,
+      peepTheHorror: (duration: number) => {
+        const returnTime = horror.target ?? appState.data.currentTime;
+
+        if (horror.timeout != null) {
+          clearTimeout(horror.timeout);
+        }
+
+        horror.target = returnTime;
+        appState.controls.setCurrentTime(returnTime, true);
+        appState.controls.setIsPlaying(true);
+
+        horror.timeout = setTimeout(() => {
+          appState.controls.setIsPlaying(false);
+          appState.controls.setCurrentTime(returnTime, true);
+          horror.timeout = null;
+          horror.target = null;
+        }, duration);
+      },
     },
   };
 
