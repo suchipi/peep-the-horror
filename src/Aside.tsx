@@ -1,30 +1,57 @@
 import React from "react";
 import AppState from "./AppState";
-import { Row, Column, Padding } from "./Layout";
+import { Row, Column } from "./Layout";
+import Button from "./Button";
 
 export default function Aside({ appState }: { appState: AppState }) {
-  const { url, startTime, endTime, currentTime } = appState.data;
-  const { setUrl, setStartTime, setEndTime, setCurrentTime, play } =
-    appState.controls;
+  const { markedTimes, currentTime } = appState.data;
+  const {
+    setCurrentTime,
+    setIsPlaying,
+    updateMarkedTimeAtIndex,
+    removeMarkedTimeAtIndex,
+  } = appState.controls;
 
   return (
-    <Column tagName="aside" gap="var(--spacing)">
-      <button
-        onClick={() => {
-          setCurrentTime(startTime);
-          play();
-        }}
-      >
-        Jump to start time
-      </button>
-      <button
-        onClick={() => {
-          setCurrentTime(endTime);
-          play();
-        }}
-      >
-        Jump to end time
-      </button>
+    <Column
+      tagName="aside"
+      gap="var(--spacing)"
+      flexBasis="33%"
+      maxHeight="100vh"
+      overflowY="auto"
+    >
+      {markedTimes.map((time, index) => (
+        <React.Fragment key={index}>
+          <Row gap="0.5em">
+            <Button
+              flexBasis="100%"
+              onClick={() => {
+                setCurrentTime(time, true);
+                setIsPlaying(true);
+              }}
+            >
+              Play {time.toFixed(3)} ({index + 1})
+            </Button>
+            <Column flexBasis="0%" gap="0.5em">
+              <Button
+                onClick={() => {
+                  updateMarkedTimeAtIndex(index, currentTime);
+                }}
+              >
+                Update{index < 9 ? ` (Shift+${index + 1})` : ""}
+              </Button>
+              <Button
+                backgroundColor="var(--del-color)"
+                onClick={() => {
+                  removeMarkedTimeAtIndex(index);
+                }}
+              >
+                Remove{index < 9 ? ` (Ctrl+${index + 1})` : ""}
+              </Button>
+            </Column>
+          </Row>
+        </React.Fragment>
+      ))}
     </Column>
   );
 }

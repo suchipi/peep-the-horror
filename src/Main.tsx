@@ -1,30 +1,22 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import Box from "react-boxxy";
 import ReactPlayer from "react-player";
 import AppState from "./AppState";
 import { Row, Column, Padding } from "./Layout";
+import Button from "./Button";
 
 export default function Main({ appState }: { appState: AppState }) {
-  const { url, startTime, endTime, currentTime, isPlaying } = appState.data;
-  const { setUrl, setStartTime, setEndTime, setCurrentTime } =
+  const { url, currentTime, isPlaying } = appState.data;
+  const { setUrl, setCurrentTime, addMarkedTime, setIsPlaying } =
     appState.controls;
 
-  const playerRef = useRef<ReactPlayer | null>(null);
+  const playerRef = appState.data.playerRef;
 
-  useEffect(() => {
-    const player = playerRef.current;
-    if (!player) return;
-
-    const playerTime = player.getCurrentTime();
-    if (playerTime == null) return;
-
-    if (Math.abs(playerTime - currentTime) > 0.1) {
-      player.seekTo(currentTime, "seconds");
-    }
-  }, [currentTime]);
+  const setPlayingTrue = () => setIsPlaying(true);
+  const setPlayingFalse = () => setIsPlaying(false);
 
   return (
-    <Column tagName="main">
+    <Column tagName="main" flexBasis="67%">
       <label htmlFor="url" style={{ flexBasis: "100%" }}>
         Video URL
       </label>
@@ -41,6 +33,9 @@ export default function Main({ appState }: { appState: AppState }) {
           controls={true}
           progressInterval={16}
           url={url}
+          onStart={setPlayingTrue}
+          onPause={setPlayingFalse}
+          onEnded={setPlayingFalse}
           onProgress={(data) => {
             setCurrentTime(data.playedSeconds);
           }}
@@ -58,44 +53,32 @@ export default function Main({ appState }: { appState: AppState }) {
 
       <Padding value="var(--spacing)" />
 
+      <label htmlFor="current-time">Current Time</label>
       <Row gap="1em">
-        <Column flexBasis="100%">
-          <label htmlFor="start-time">Start Time</label>
-          <input
-            id="start-time"
-            type="number"
-            step="0.1"
-            value={startTime.toFixed(3)}
-            onChange={(event) => setStartTime(parseFloat(event.target.value))}
-          />
-        </Column>
-
-        <Column flexBasis="100%">
-          <label htmlFor="end-time">End Time</label>
-          <input
-            id="end-time"
-            type="number"
-            step="0.1"
-            value={endTime.toFixed(3)}
-            onChange={(event) => setEndTime(parseFloat(event.target.value))}
-          />
-        </Column>
-      </Row>
-
-      <Row>
-        <span className="time-label">Current Time:&nbsp;</span>
-        <span className="current-time">{currentTime.toFixed(3)}</span>
+        <input
+          id="current-time"
+          type="number"
+          min="0"
+          step="0.1"
+          value={currentTime.toFixed(3)}
+          onChange={(event) =>
+            setCurrentTime(parseFloat(event.target.value), true)
+          }
+          style={{ marginBottom: "0" }}
+        />
+        <Button
+          onClick={() => addMarkedTime(currentTime)}
+          backgroundColor="var(--ins-color)"
+        >
+          Mark {currentTime.toFixed(3)} (+)
+        </Button>
       </Row>
 
       <Padding value="var(--spacing)" />
 
-      <Row gap="1em">
-        <button onClick={() => setStartTime(currentTime)}>
-          Set Start Time to {currentTime.toFixed(3)}
-        </button>
-        <button onClick={() => setEndTime(currentTime)}>
-          Set End Time to {currentTime.toFixed(3)}
-        </button>
+      <Row gap="var(--spacing)">
+        <Button onClick={setPlayingTrue}>Play (0)</Button>
+        <Button onClick={setPlayingFalse}>Pause (.)</Button>
       </Row>
     </Column>
   );

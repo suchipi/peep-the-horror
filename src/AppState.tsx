@@ -1,18 +1,21 @@
+import React from "react";
+import ReactPlayer from "react-player";
+
 export type Data = {
   url: string;
-  startTime: number;
-  endTime: number;
   currentTime: number;
+  markedTimes: Array<number>;
   isPlaying: boolean;
+  playerRef: React.MutableRefObject<ReactPlayer | null>;
 };
 
 export type Controls = {
   setUrl: (url: string) => void;
-  setStartTime: (startTime: number) => void;
-  setEndTime: (endTime: number) => void;
-  setCurrentTime: (currentTime: number) => void;
-  play: () => void;
-  pause: () => void;
+  addMarkedTime: (time: number) => void;
+  updateMarkedTimeAtIndex: (index: number, time: number) => void;
+  removeMarkedTimeAtIndex: (index: number) => void;
+  setCurrentTime: (currentTime: number, aggressively?: boolean) => void;
+  setIsPlaying: (playing: boolean) => void;
 };
 
 type AppState = {

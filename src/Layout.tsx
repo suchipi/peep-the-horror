@@ -6,11 +6,14 @@ export const Row = Box.withProps({
   flexDirection: "row",
   className: "row",
 });
+Row.displayName = "Row";
+
 export const Column = Box.withProps({
   display: "flex",
   flexDirection: "column",
   className: "column",
 });
+Column.displayName = "Column";
 
 const parseCssInput = (value: number | string): string => {
   if (value === "") {
