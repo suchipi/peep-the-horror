@@ -2,7 +2,6 @@
   "name": "youtube-dj",
   "version": "1.0.0",
   "description": "Turn any youtube video into a soundboard",
-  "main": "index.js",
   "scripts": {
     "start": "parcel src/index.html",
     "build": "parcel build src/index.html"
